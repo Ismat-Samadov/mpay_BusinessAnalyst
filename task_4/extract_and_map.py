@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import pandas as pd
+from rapidfuzz import process
 
 # Load the HTML content
 file_path = 'task_4/data.html'
@@ -34,18 +35,20 @@ regions = [
     "Tovuz", "Ucar", "Yardımlı", "Yevlax", "Zəngilan", "Zaqatala", "Zərdab"
 ]
 
-# Define a function to match regions based on substring presence in the address
-def determine_region_by_substring(address):
-    for region in regions:
-        if region in address:
-            return region
+# Define a function to match regions using fuzzy matching
+def determine_region_fuzzy(address):
+    result = process.extractOne(address, regions, score_cutoff=45)  # Adjust the cutoff as needed
+    if result:
+        # result might have more than two elements, so we use only the first one
+        match = result[0]  # The best matching region
+        return match
     return "Other"
 
 # Apply the function to the 'address' column
-df['region'] = df['address'].apply(determine_region_by_substring)
+df['region'] = df['address'].apply(determine_region_fuzzy)
 
 # Save the DataFrame to an Excel file
-output_file_path = 'task_4/terminal_data_with_regions.xlsx'
+output_file_path = 'task_4/terminal_data_with_fuzzy_regions.xlsx'
 df.to_excel(output_file_path, index=False)
 
-output_file_path
+print(f"Data has been saved to {output_file_path}")
