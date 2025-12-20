@@ -89,8 +89,8 @@ print("\nCreating Chart 1: Time Series (Original Values)...")
 fig, ax1 = plt.subplots(figsize=(16, 8))
 
 color1 = 'tab:blue'
-ax1.set_xlabel('Year', fontsize=14, fontweight='bold')
-ax1.set_ylabel('GDP Growth (%)', color=color1, fontsize=14, fontweight='bold')
+ax1.set_xlabel('Year', fontsize=14, fontweight='bold', labelpad=10)
+ax1.set_ylabel('GDP Growth (%)', color=color1, fontsize=14, fontweight='bold', labelpad=10)
 line1 = ax1.plot(merged_df['Year'], merged_df['GDP_Growth'], color=color1, linewidth=2.5,
                  marker='o', markersize=6, label='GDP Growth (%)', alpha=0.8)
 ax1.tick_params(axis='y', labelcolor=color1, labelsize=12)
@@ -100,7 +100,7 @@ ax1.axhline(y=0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
 
 ax2 = ax1.twinx()
 color2 = 'tab:orange'
-ax2.set_ylabel('Azeri Light Oil Price (USD/barrel)', color=color2, fontsize=14, fontweight='bold')
+ax2.set_ylabel('Azeri Light Oil Price (USD/barrel)', color=color2, fontsize=14, fontweight='bold', labelpad=10)
 line2 = ax2.plot(merged_df['Year'], merged_df['Oil_Price_Mean'], color=color2, linewidth=2.5,
                  marker='s', markersize=6, label='Azeri Light Oil Price', alpha=0.8)
 ax2.tick_params(axis='y', labelcolor=color2, labelsize=12)
@@ -139,8 +139,8 @@ ax.plot(merged_df['Year'], merged_df['Oil_Price_Normalized'],
         color='tab:orange', linewidth=2.5, marker='s', markersize=6,
         label='Oil Price (Normalized)', alpha=0.8)
 
-ax.set_xlabel('Year', fontsize=14, fontweight='bold')
-ax.set_ylabel('Normalized Value (0-1 scale)', fontsize=14, fontweight='bold')
+ax.set_xlabel('Year', fontsize=14, fontweight='bold', labelpad=10)
+ax.set_ylabel('Normalized Value (0-1 scale)', fontsize=14, fontweight='bold', labelpad=10)
 ax.set_title('Normalized Comparison: Azerbaijan GDP Growth vs Azeri Light Oil Price',
              fontsize=16, fontweight='bold', pad=20)
 ax.legend(loc='upper left', fontsize=12, framealpha=0.95,
@@ -163,7 +163,7 @@ plt.close()
 # CHART 3: Scatter Plot with Regression Line
 # ============================================================================
 print("Creating Chart 3: Scatter Plot with Regression...")
-fig, ax = plt.subplots(figsize=(12, 8))
+fig, ax = plt.subplots(figsize=(13, 8))
 
 # Scatter plot
 scatter = ax.scatter(merged_df['Oil_Price_Mean'], merged_df['GDP_Growth'],
@@ -174,27 +174,27 @@ scatter = ax.scatter(merged_df['Oil_Price_Mean'], merged_df['GDP_Growth'],
 z = np.polyfit(merged_df['Oil_Price_Mean'], merged_df['GDP_Growth'], 1)
 p = np.poly1d(z)
 ax.plot(merged_df['Oil_Price_Mean'], p(merged_df['Oil_Price_Mean']),
-        "r--", linewidth=2.5, alpha=0.8, label=f'Linear fit: y={z[0]:.3f}x+{z[1]:.3f}')
+        "r--", linewidth=2.5, alpha=0.8, label=f'Trend line: y={z[0]:.3f}x+{z[1]:.3f}')
 
-# Add colorbar
-cbar = plt.colorbar(scatter, ax=ax)
-cbar.set_label('Year', fontsize=12, fontweight='bold')
+# Add colorbar with more space
+cbar = plt.colorbar(scatter, ax=ax, pad=0.02)
+cbar.set_label('Year', fontsize=12, fontweight='bold', labelpad=10)
 cbar.ax.tick_params(labelsize=10)
 
-ax.set_xlabel('Azeri Light Oil Price (USD/barrel)', fontsize=14, fontweight='bold')
-ax.set_ylabel('GDP Growth (%)', fontsize=14, fontweight='bold')
+ax.set_xlabel('Azeri Light Oil Price (USD/barrel)', fontsize=14, fontweight='bold', labelpad=10)
+ax.set_ylabel('GDP Growth (%)', fontsize=14, fontweight='bold', labelpad=10)
 ax.set_title('Relationship: GDP Growth vs Oil Price (Color-coded by Year)',
              fontsize=16, fontweight='bold', pad=20)
 ax.grid(True, alpha=0.3)
-ax.legend(fontsize=12, framealpha=0.95, loc='upper right',
+ax.legend(fontsize=11, framealpha=0.95, loc='upper left',
          edgecolor='black', fancybox=True, shadow=True)
 ax.tick_params(labelsize=12)
 
-# Add correlation text box in bottom right
-ax.text(0.98, 0.02, f'Correlation: {correlation:.4f}',
-        transform=ax.transAxes, fontsize=12,
-        verticalalignment='bottom', horizontalalignment='right',
-        bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.9, edgecolor='black'))
+# Add correlation text box in bottom left with better positioning
+ax.text(0.02, 0.02, f'Correlation: {correlation:.4f}\n(Weak negative)',
+        transform=ax.transAxes, fontsize=11,
+        verticalalignment='bottom', horizontalalignment='left',
+        bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.95, edgecolor='black', linewidth=1.5))
 
 plt.tight_layout()
 plt.savefig('charts/3_scatter_regression.png', dpi=300, bbox_inches='tight')
@@ -211,7 +211,7 @@ decade_stats = merged_df.groupby('Decade').agg({
     'Oil_Price_Mean': 'mean'
 }).reset_index()
 
-fig, ax1 = plt.subplots(figsize=(12, 8))
+fig, ax1 = plt.subplots(figsize=(13, 8))
 
 x = np.arange(len(decade_stats))
 width = 0.35
@@ -220,7 +220,15 @@ color1 = 'tab:blue'
 bars1 = ax1.bar(x - width/2, decade_stats['GDP_Growth'], width,
                 label='Avg GDP Growth (%)', color=color1, alpha=0.8,
                 edgecolor='black', linewidth=1.5)
-ax1.set_ylabel('Average GDP Growth (%)', color=color1, fontsize=14, fontweight='bold')
+
+# Add value labels on bars
+for i, bar in enumerate(bars1):
+    height = bar.get_height()
+    ax1.text(bar.get_x() + bar.get_width()/2., height,
+             f'{height:.1f}%',
+             ha='center', va='bottom', fontsize=10, fontweight='bold', color='darkblue')
+
+ax1.set_ylabel('Average GDP Growth (%)', color=color1, fontsize=14, fontweight='bold', labelpad=10)
 ax1.tick_params(axis='y', labelcolor=color1, labelsize=12)
 ax1.axhline(y=0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
 
@@ -229,20 +237,29 @@ color2 = 'tab:orange'
 bars2 = ax2.bar(x + width/2, decade_stats['Oil_Price_Mean'], width,
                 label='Avg Oil Price (USD/barrel)', color=color2, alpha=0.8,
                 edgecolor='black', linewidth=1.5)
-ax2.set_ylabel('Average Oil Price (USD/barrel)', color=color2, fontsize=14, fontweight='bold')
+
+# Add value labels on bars
+for i, bar in enumerate(bars2):
+    height = bar.get_height()
+    ax2.text(bar.get_x() + bar.get_width()/2., height,
+             f'${height:.1f}',
+             ha='center', va='bottom', fontsize=10, fontweight='bold', color='darkorange')
+
+ax2.set_ylabel('Average Oil Price (USD/barrel)', color=color2, fontsize=14, fontweight='bold', labelpad=10)
 ax2.tick_params(axis='y', labelcolor=color2, labelsize=12)
 
-ax1.set_xlabel('Decade', fontsize=14, fontweight='bold')
+ax1.set_xlabel('Decade', fontsize=14, fontweight='bold', labelpad=10)
 ax1.set_title('Average GDP Growth and Oil Price by Decade',
               fontsize=16, fontweight='bold', pad=20)
 ax1.set_xticks(x)
-ax1.set_xticklabels([f"{int(d)}s" for d in decade_stats['Decade']], fontsize=12)
-ax1.tick_params(axis='x', labelsize=12)
+ax1.set_xticklabels([f"{int(d)}s" for d in decade_stats['Decade']], fontsize=13, fontweight='bold')
+ax1.tick_params(axis='x', labelsize=13)
 
-# Combine legends
+# Combine legends with better positioning
 lines = [bars1, bars2]
 labels = [l.get_label() for l in lines]
-ax1.legend(lines, labels, loc='upper left', fontsize=12, framealpha=0.9)
+ax1.legend(lines, labels, loc='upper left', fontsize=12, framealpha=0.95,
+          edgecolor='black', fancybox=True, shadow=True)
 
 ax1.grid(True, alpha=0.3, axis='y')
 
@@ -286,8 +303,8 @@ print("Creating Chart 6: Oil Price Volatility Analysis...")
 fig, ax1 = plt.subplots(figsize=(16, 8))
 
 color1 = 'tab:blue'
-ax1.set_xlabel('Year', fontsize=14, fontweight='bold')
-ax1.set_ylabel('GDP Growth (%)', color=color1, fontsize=14, fontweight='bold')
+ax1.set_xlabel('Year', fontsize=14, fontweight='bold', labelpad=10)
+ax1.set_ylabel('GDP Growth (%)', color=color1, fontsize=14, fontweight='bold', labelpad=10)
 line1 = ax1.plot(merged_df['Year'], merged_df['GDP_Growth'], color=color1,
                  linewidth=2.5, marker='o', markersize=6, label='GDP Growth (%)', alpha=0.8)
 ax1.tick_params(axis='y', labelcolor=color1, labelsize=12)
@@ -297,7 +314,7 @@ ax1.axhline(y=0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
 
 ax2 = ax1.twinx()
 color2 = 'tab:red'
-ax2.set_ylabel('Oil Price Standard Deviation (USD)', color=color2, fontsize=14, fontweight='bold')
+ax2.set_ylabel('Oil Price Volatility - Std Dev (USD)', color=color2, fontsize=14, fontweight='bold', labelpad=10)
 line2 = ax2.plot(merged_df['Year'], merged_df['Oil_Price_Std'], color=color2,
                  linewidth=2.5, marker='^', markersize=6,
                  label='Oil Price Volatility (Std Dev)', alpha=0.8)
@@ -308,7 +325,15 @@ plt.title('Azerbaijan GDP Growth vs Azeri Light Oil Price Volatility',
 
 lines = line1 + line2
 labels = [l.get_label() for l in lines]
-ax1.legend(lines, labels, loc='upper left', fontsize=12, framealpha=0.9)
+ax1.legend(lines, labels, loc='upper left', fontsize=12, framealpha=0.95,
+          edgecolor='black', fancybox=True, shadow=True)
+
+# Add information box
+volatility_corr = merged_df['GDP_Growth'].corr(merged_df['Oil_Price_Std'])
+ax1.text(0.98, 0.02, f'GDP-Volatility Correlation: {volatility_corr:.4f}',
+         transform=ax1.transAxes, fontsize=11,
+         verticalalignment='bottom', horizontalalignment='right',
+         bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.95, edgecolor='black', linewidth=1.5))
 
 plt.tight_layout()
 plt.savefig('charts/6_oil_volatility_gdp.png', dpi=300, bbox_inches='tight')
