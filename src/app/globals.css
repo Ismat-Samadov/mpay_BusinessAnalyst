@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/* ── Ocean theme variables ── */
+:root {
+  --ocean-deep:   #04091a;
+  --ocean-mid:    #071428;
+  --ocean-light:  #0a1f3a;
+  --cyan-glow:    rgba(0, 200, 230, 0.35);
+  --red-glow:     rgba(220, 40, 40, 0.35);
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--ocean-deep);
+  color: #c8e0f4;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Ocean animated background ── */
+.ocean-bg {
+  background:
+    radial-gradient(ellipse at 20% 0%,   #0d2548 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 0%,   #0a1a40 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, #071020 0%, transparent 70%),
+    linear-gradient(180deg, #04091a 0%, #071428 50%, #050d20 100%);
+  min-height: 100vh;
+}
+
+/* ── Glass panel ── */
+.glass-panel {
+  background: rgba(5, 18, 45, 0.75);
+  border: 1px solid rgba(30, 80, 140, 0.35);
+  border-radius: 1rem;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 4px 32px rgba(0, 10, 40, 0.6),
+    inset 0 1px 0 rgba(80, 160, 255, 0.06);
+}
+
+/* ── Board cell (size is responsive via CSS) ── */
+.board-cell {
+  width:  clamp(26px, 3.8vw, 42px);
+  height: clamp(26px, 3.8vw, 42px);
+  border-radius: 3px;
+  outline: none;
+}
+
+/* ── Board label ── */
+.board-label {
+  width:  clamp(18px, 2.4vw, 28px);
+  height: clamp(26px, 3.8vw, 42px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+/* ── Score badge ── */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);   }
+}
+.animate-fade-in { animation: fadeIn 0.35s ease-out both; }
+
+/* Slide up (modal) */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)     scale(1);   }
+}
+.animate-slide-up { animation: slideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Hit cell flash */
+@keyframes hitFlash {
+  0%   { background-color: #ff6b1a; box-shadow: 0 0 16px #ff4400; }
+  40%  { background-color: #cc2200; box-shadow: 0 0 24px #ff3300; }
+  100% { background-color: #b91c1c; box-shadow: none; }
+}
+.cell-hit { animation: hitFlash 0.5s ease-out forwards; }
+
+/* Bounce slow (trophy) */
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-12px); }
+}
+.animate-bounce-slow { animation: bounceSlow 1.6s ease-in-out infinite; }
+
+/* Ping once (hit emoji) */
+@keyframes pingOnce {
+  0%   { transform: scale(0.5); opacity: 1; }
+  60%  { transform: scale(1.4); opacity: 0.8; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+.animate-ping-once { animation: pingOnce 0.4s ease-out both; }
+
+/* Pulse (turn dot) */
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1);   }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+.animate-pulse { animation: pulseDot 1.4s ease-in-out infinite; }
+
+/* Spin (AI thinking) */
+@keyframes spin { to { transform: rotate(360deg); } }
+.animate-spin { display: inline-block; animation: spin 1s linear infinite; }

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#04091a"/>
+  <!-- Ocean waves -->
+  <rect x="4" y="44" width="56" height="16" rx="4" fill="#071d40"/>
+  <path d="M4 44 Q16 38 28 44 Q40 50 52 44 Q58 41 60 44 L60 60 Q58 60 52 60 Q40 60 28 60 Q16 60 4 60 Z" fill="#0a2d60"/>
+  <!-- Ship hull -->
+  <path d="M10 40 L54 40 L50 48 L14 48 Z" fill="#1e4080" stroke="#2a5aaa" stroke-width="1"/>
+  <!-- Deck -->
+  <rect x="14" y="32" width="36" height="9" rx="2" fill="#1a3a70" stroke="#2a5aaa" stroke-width="1"/>
+  <!-- Bridge -->
+  <rect x="24" y="22" width="16" height="11" rx="2" fill="#153060" stroke="#2a5aaa" stroke-width="1"/>
+  <!-- Mast -->
+  <line x1="32" y1="8" x2="32" y2="22" stroke="#4080cc" stroke-width="2" stroke-linecap="round"/>
+  <!-- Crossbar -->
+  <line x1="26" y1="13" x2="38" y2="13" stroke="#4080cc" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Cannon -->
+  <rect x="40" y="34" width="10" height="4" rx="2" fill="#2a60aa"/>
+  <!-- Cyan accent dot -->
+  <circle cx="32" cy="8" r="3" fill="#00c8e6"/>
+  <!-- Windows -->
+  <circle cx="27" cy="27" r="2" fill="#00c8e6" opacity="0.7"/>
+  <circle cx="37" cy="27" r="2" fill="#00c8e6" opacity="0.7"/>
+</svg>
